@@ -1,0 +1,25 @@
+version: "2"
+services:
+  pgweb:
+    image: sosedoff/pgweb
+    container_name: pgweb
+    restart: always
+    ports: 
+      - "8081:8081" 
+    environment:
+      - DATABASE_URL=postgres://postgres:pgweb@postgres:5432/test_db?sslmode=disable
+    depends_on:
+    - db
+  db:
+    image: postgres:13-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_DB: test_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pgweb
+      POSTGRES_INITCB_ARGS: "--encoding=UTF-8 --locale=ja_JP.UTF-8"
+      TZ: Asia/Tokyo
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d
