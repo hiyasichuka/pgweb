@@ -1,15 +1,15 @@
 version: "3"
 services:
   pgweb:
-    image: sosedoff/pgweb:0.11.8
+    image: sosedoff/pgweb:0.11.10
     container_name: pgweb
     restart: always
-    ports: 
+    ports:
       - 8081:8081
     environment:
       - DATABASE_URL=postgres://postgres:pgweb@postgres:5432/test_db?sslmode=disable
     depends_on:
-    - db
+      - db
   db:
     image: postgres:alpine
     container_name: postgres
