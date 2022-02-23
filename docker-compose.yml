@@ -11,7 +11,7 @@ services:
     depends_on:
     - db
   db:
-    image: postgres:13-alpine
+    image: postgres:alpine
     container_name: postgres
     environment:
       POSTGRES_DB: test_db

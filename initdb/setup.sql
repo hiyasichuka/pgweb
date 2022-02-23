@@ -1,3 +1,5 @@
+create database "task-management";
+
 create table users (
   id int,
   full_name varchar(50),
