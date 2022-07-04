@@ -4,7 +4,8 @@ WEBでDB操作できるpgwebを試す。
 
 # 前提条件
 
-[DockerDesktop](https://www.docker.com/products/docker-desktop)をPCにインストールしていること。
+- [DockerDesktop](https://www.docker.com/products/docker-desktop)をPCにインストールしていること。
+- 他のサービスで、3000および8081番ポートを使用していないこと
 
 # やりかた
 
@@ -18,7 +19,7 @@ docker-composeでDockerコンテナを立ち上げる。
 
 ```
 cd pgweb
-docker-compose up -d
+docker compose up
 ```
 
 WEBブラウザで確認する。
