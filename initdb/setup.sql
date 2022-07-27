@@ -1,4 +1,4 @@
-create database "task-management";
+create database "testdb";
 
 create table users (
   id int,
