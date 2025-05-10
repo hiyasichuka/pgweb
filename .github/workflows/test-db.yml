@@ -1,0 +1,55 @@
+name: db test
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  dbtest:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: pgweb
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Wait for PostgreSQL
+        run: |
+          for i in {1..10}; do
+            pg_isready -h localhost -p 5432 -U postgres && break
+            sleep 2
+          done
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Run SQL scripts from initdb
+        run: |
+            export PGPASSWORD=pgweb
+            for file in ./initdb/*.sql; do
+            echo "Executing $file"
+            psql -h localhost -U postgres -d test_db -f "$file"
+            done
+
+      - name: Test user count
+        run: |
+          export PGPASSWORD=pgweb
+          count=$(psql -h localhost -U postgres -d test_db -t -c "SELECT COUNT(*) FROM users;" | xargs)
+          echo "Row count is $count"
+          if [ "$count" -ne 4 ]; then
+            echo "Expected 4 rows but got $count"
+            exit 1
+          fi
